@@ -84,7 +84,6 @@ def run_script():
 
     # Send email with data
     send_email(received_data)
-date_of_registration
 # Schedule the script to run daily at a specified time
 schedule.every().day.at("10:00").do(run_script)
 
