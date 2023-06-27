@@ -11,22 +11,22 @@ import schedule
 import whois
 
 
-def extract_whois_data(domains):
-    extracted_data = []
-    for domain in domains:
+def get_whois_data(domains):
+    received_data = []
+    for section in domains:
         try:
-            w = whois.whois(domain)
+            w = whois.whois(section)
             name = w.name
             email = w.email
             phone = w.phone
-            registration_date = w.creation_date
-            extracted_data.append([name, domain, email, phone, registration_date])
+            date_of_registration= w.creation_date
+            received_data.append([name,section, email, phone, date_of_registration])
         except Exception as e:
-            log_error(f"Error extracting WHOIS data for {domain}: {str(e)}")
-    return extracted_data
+            log_error(f"Error extracting WHOIS data for {section}: {str(e)}")
+    return received_data
 
 
-def store_data_in_csv(data):
+def store_data_in_csv (data):
     filename = f"whois_data_{datetime.datetime.now().strftime('%Y%m%d')}.csv"
     with open(filename, "a", newline="") as file:
         writer = csv.writer(file)
@@ -34,12 +34,12 @@ def store_data_in_csv(data):
     print(f"Extracted data stored in {filename}")
 
 
-def send_email_with_data(data):
+def send_email (data):
     sender_email = "your_email@example.com"
     sender_password = "your_email_password"
     recipient_email = "recipient_email@example.com"
 
-    subject = f"WHOIS Data - {datetime.datetime.now().strftime('%Y-%m-%d')}"
+    subject = f"WHOIS Data -data {datetime.datetime.now().strftime('%Y-%m-%d')}"
     body = "Please find attached the WHOIS data for newly registered domains."
     attachment = f"whois_data_{datetime.datetime.now().strftime('%Y%m%d')}.csv"
 
@@ -77,15 +77,14 @@ def run_script():
     domains = ["example1.com", "example2.com", "example3.com"]
 
     # Extract WHOIS data
-    extracted_data = extract_whois_data(domains)
+    received_data = get_whois_data(domains)
 
     # Store data in CSV
-    store_data_in_csv(extracted_data)
+    store_data_in_csv(received_data)
 
     # Send email with data
-    send_email_with_data(extracted_data)
-
-
+    send_email(received_data)
+date_of_registration
 # Schedule the script to run daily at a specified time
 schedule.every().day.at("10:00").do(run_script)
 
